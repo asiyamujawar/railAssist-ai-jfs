@@ -1,0 +1,35 @@
+{
+  "user": {
+    "id": "u001",
+    "name": "Arjun Mehta",
+    "email": "arjun.mehta@email.com",
+    "phone": "+91 98765 43210",
+    "memberSince": "2021",
+    "tripsTaken": 47,
+    "tier": "Platinum",
+    "avatar": "AM"
+  },
+  "passengers": [
+    {
+      "id": "p1",
+      "name": "Arjun Mehta",
+      "age": 34,
+      "gender": "Male",
+      "berthPreference": "Lower"
+    },
+    {
+      "id": "p2",
+      "name": "Priya Mehta",
+      "age": 31,
+      "gender": "Female",
+      "berthPreference": "Lower"
+    },
+    {
+      "id": "p3",
+      "name": "Aarav Mehta",
+      "age": 7,
+      "gender": "Male",
+      "berthPreference": "Side Lower"
+    }
+  ]
+}

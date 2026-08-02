@@ -1,0 +1,310 @@
+{
+  "stations": [
+    { "code": "NDLS", "name": "New Delhi", "city": "Delhi" },
+    { "code": "BCT", "name": "Mumbai Central", "city": "Mumbai" },
+    { "code": "CSMT", "name": "Mumbai CSMT", "city": "Mumbai" },
+    { "code": "HWH", "name": "Howrah Junction", "city": "Kolkata" },
+    { "code": "MAS", "name": "MGR Chennai Central", "city": "Chennai" },
+    { "code": "SBC", "name": "KSR Bengaluru", "city": "Bengaluru" },
+    { "code": "SC", "name": "Secunderabad Jn", "city": "Hyderabad" },
+    { "code": "PUNE", "name": "Pune Junction", "city": "Pune" },
+    { "code": "JP", "name": "Jaipur Junction", "city": "Jaipur" },
+    { "code": "ADI", "name": "Ahmedabad Jn", "city": "Ahmedabad" },
+    { "code": "LKO", "name": "Lucknow Charbagh", "city": "Lucknow" },
+    { "code": "PNBE", "name": "Patna Junction", "city": "Patna" },
+    { "code": "BBS", "name": "Bhubaneswar", "city": "Bhubaneswar" },
+    { "code": "ERS", "name": "Ernakulam Jn", "city": "Kochi" },
+    { "code": "TVC", "name": "Thiruvananthapuram", "city": "Thiruvananthapuram" },
+    { "code": "GHY", "name": "Guwahati", "city": "Guwahati" },
+    { "code": "JAT", "name": "Jammu Tawi", "city": "Jammu" },
+    { "code": "BSB", "name": "Varanasi Jn", "city": "Varanasi" },
+    { "code": "GKP", "name": "Gorakhpur Jn", "city": "Gorakhpur" },
+    { "code": "ALD", "name": "Prayagraj Jn", "city": "Prayagraj" }
+  ],
+  "trains": [
+    {
+      "id": "12951",
+      "name": "Rajdhani Express",
+      "number": "12951",
+      "type": "Rajdhani",
+      "from": "NDLS",
+      "fromName": "New Delhi",
+      "to": "BCT",
+      "toName": "Mumbai Central",
+      "departure": "16:25",
+      "arrival": "08:35",
+      "duration": "16h 10m",
+      "distance": 1384,
+      "daysOfWeek": ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+      "classes": [
+        { "code": "1A", "name": "AC First Class", "fare": 5230, "available": 12, "status": "available" },
+        { "code": "2A", "name": "AC 2 Tier", "fare": 3145, "available": 45, "status": "available" },
+        { "code": "3A", "name": "AC 3 Tier", "fare": 2275, "available": 8, "status": "limited" }
+      ],
+      "rating": 4.6,
+      "onTime": 92
+    },
+    {
+      "id": "12002",
+      "name": "Shatabdi Express",
+      "number": "12002",
+      "type": "Shatabdi",
+      "from": "NDLS",
+      "fromName": "New Delhi",
+      "to": "LKO",
+      "toName": "Lucknow Charbagh",
+      "departure": "06:15",
+      "arrival": "12:45",
+      "duration": "6h 30m",
+      "distance": 510,
+      "daysOfWeek": ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+      "classes": [
+        { "code": "CC", "name": "AC Chair Car", "fare": 1345, "available": 120, "status": "available" },
+        { "code": "EC", "name": "Exec Chair Car", "fare": 2690, "available": 22, "status": "available" }
+      ],
+      "rating": 4.5,
+      "onTime": 88
+    },
+    {
+      "id": "12259",
+      "name": "Duronto Express",
+      "number": "12259",
+      "type": "Duronto",
+      "from": "NDLS",
+      "fromName": "New Delhi",
+      "to": "SBC",
+      "toName": "KSR Bengaluru",
+      "departure": "20:45",
+      "arrival": "14:30",
+      "duration": "41h 45m",
+      "distance": 2440,
+      "daysOfWeek": ["Mon","Wed","Fri","Sun"],
+      "classes": [
+        { "code": "2A", "name": "AC 2 Tier", "fare": 4180, "available": 0, "status": "waitlist" },
+        { "code": "3A", "name": "AC 3 Tier", "fare": 2965, "available": 3, "status": "limited" },
+        { "code": "SL", "name": "Sleeper", "fare": 1120, "available": 88, "status": "available" }
+      ],
+      "rating": 4.3,
+      "onTime": 79
+    },
+    {
+      "id": "12626",
+      "name": "Kerala Express",
+      "number": "12626",
+      "type": "Superfast",
+      "from": "NDLS",
+      "fromName": "New Delhi",
+      "to": "TVC",
+      "toName": "Thiruvananthapuram",
+      "departure": "11:35",
+      "arrival": "05:10",
+      "duration": "41h 35m",
+      "distance": 3050,
+      "daysOfWeek": ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+      "classes": [
+        { "code": "2A", "name": "AC 2 Tier", "fare": 4320, "available": 18, "status": "available" },
+        { "code": "3A", "name": "AC 3 Tier", "fare": 3050, "available": 52, "status": "available" },
+        { "code": "SL", "name": "Sleeper", "fare": 1180, "available": 210, "status": "available" }
+      ],
+      "rating": 4.1,
+      "onTime": 74
+    },
+    {
+      "id": "12302",
+      "name": "Howrah Rajdhani",
+      "number": "12302",
+      "type": "Rajdhani",
+      "from": "NDLS",
+      "fromName": "New Delhi",
+      "to": "HWH",
+      "toName": "Howrah Junction",
+      "departure": "16:55",
+      "arrival": "10:00",
+      "duration": "17h 05m",
+      "distance": 1450,
+      "daysOfWeek": ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+      "classes": [
+        { "code": "1A", "name": "AC First Class", "fare": 5610, "available": 6, "status": "limited" },
+        { "code": "2A", "name": "AC 2 Tier", "fare": 3365, "available": 30, "status": "available" },
+        { "code": "3A", "name": "AC 3 Tier", "fare": 2435, "available": 0, "status": "waitlist" }
+      ],
+      "rating": 4.7,
+      "onTime": 90
+    },
+    {
+      "id": "12213",
+      "name": "Deccan Queen",
+      "number": "12123",
+      "type": "Superfast",
+      "from": "CSMT",
+      "fromName": "Mumbai CSMT",
+      "to": "PUNE",
+      "toName": "Pune Junction",
+      "departure": "17:10",
+      "arrival": "20:25",
+      "duration": "3h 15m",
+      "distance": 192,
+      "daysOfWeek": ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+      "classes": [
+        { "code": "CC", "name": "AC Chair Car", "fare": 665, "available": 145, "status": "available" },
+        { "code": "2S", "name": "Second Sitting", "fare": 185, "available": 320, "status": "available" }
+      ],
+      "rating": 4.4,
+      "onTime": 95
+    },
+    {
+      "id": "16526",
+      "name": "Bangalore Kaveri Express",
+      "number": "16526",
+      "type": "Express",
+      "from": "SBC",
+      "fromName": "KSR Bengaluru",
+      "to": "MAS",
+      "toName": "MGR Chennai Central",
+      "departure": "21:15",
+      "arrival": "05:30",
+      "duration": "8h 15m",
+      "distance": 360,
+      "daysOfWeek": ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+      "classes": [
+        { "code": "1A", "name": "AC First Class", "fare": 1485, "available": 14, "status": "available" },
+        { "code": "2A", "name": "AC 2 Tier", "fare": 945, "available": 42, "status": "available" },
+        { "code": "3A", "name": "AC 3 Tier", "fare": 685, "available": 5, "status": "limited" },
+        { "code": "SL", "name": "Sleeper", "fare": 295, "available": 180, "status": "available" }
+      ],
+      "rating": 4.0,
+      "onTime": 71
+    },
+    {
+      "id": "12909",
+      "name": "Garib Rath Express",
+      "number": "12909",
+      "type": "Garib Rath",
+      "from": "NDLS",
+      "fromName": "New Delhi",
+      "to": "ADI",
+      "toName": "Ahmedabad Jn",
+      "departure": "13:55",
+      "arrival": "06:40",
+      "duration": "16h 45m",
+      "distance": 1090,
+      "daysOfWeek": ["Tue","Thu","Sat"],
+      "classes": [
+        { "code": "3A", "name": "AC 3 Tier (GR)", "fare": 1295, "available": 68, "status": "available" },
+        { "code": "CC", "name": "AC Chair Car", "fare": 745, "available": 0, "status": "waitlist" }
+      ],
+      "rating": 3.8,
+      "onTime": 68
+    },
+    {
+      "id": "12423",
+      "name": "Dibrugarh Rajdhani",
+      "number": "12423",
+      "type": "Rajdhani",
+      "from": "NDLS",
+      "fromName": "New Delhi",
+      "to": "GHY",
+      "toName": "Guwahati",
+      "departure": "09:50",
+      "arrival": "04:45",
+      "duration": "42h 55m",
+      "distance": 2800,
+      "daysOfWeek": ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+      "classes": [
+        { "code": "1A", "name": "AC First Class", "fare": 6240, "available": 4, "status": "limited" },
+        { "code": "2A", "name": "AC 2 Tier", "fare": 3725, "available": 20, "status": "available" },
+        { "code": "3A", "name": "AC 3 Tier", "fare": 2680, "available": 48, "status": "available" }
+      ],
+      "rating": 4.5,
+      "onTime": 82
+    },
+    {
+      "id": "12009",
+      "name": "Shatabdi Express",
+      "number": "12009",
+      "type": "Shatabdi",
+      "from": "NDLS",
+      "fromName": "New Delhi",
+      "to": "JP",
+      "toName": "Jaipur Junction",
+      "departure": "06:05",
+      "arrival": "10:35",
+      "duration": "4h 30m",
+      "distance": 309,
+      "daysOfWeek": ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+      "classes": [
+        { "code": "CC", "name": "AC Chair Car", "fare": 745, "available": 95, "status": "available" },
+        { "code": "EC", "name": "Exec Chair Car", "fare": 1490, "available": 18, "status": "available" }
+      ],
+      "rating": 4.3,
+      "onTime": 91
+    },
+    {
+      "id": "12707",
+      "name": "Tirupati Express",
+      "number": "12707",
+      "type": "Superfast",
+      "from": "SC",
+      "fromName": "Secunderabad Jn",
+      "to": "MAS",
+      "toName": "MGR Chennai Central",
+      "departure": "18:30",
+      "arrival": "06:10",
+      "duration": "11h 40m",
+      "distance": 730,
+      "daysOfWeek": ["Mon","Wed","Fri","Sun"],
+      "classes": [
+        { "code": "2A", "name": "AC 2 Tier", "fare": 1845, "available": 26, "status": "available" },
+        { "code": "3A", "name": "AC 3 Tier", "fare": 1320, "available": 0, "status": "waitlist" },
+        { "code": "SL", "name": "Sleeper", "fare": 525, "available": 140, "status": "available" }
+      ],
+      "rating": 4.2,
+      "onTime": 77
+    },
+    {
+      "id": "12801",
+      "name": "Purushottam Express",
+      "number": "12801",
+      "type": "Superfast",
+      "from": "PNBE",
+      "fromName": "Patna Junction",
+      "to": "NDLS",
+      "toName": "New Delhi",
+      "departure": "10:40",
+      "arrival": "04:15",
+      "duration": "17h 35m",
+      "distance": 1010,
+      "daysOfWeek": ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+      "classes": [
+        { "code": "2A", "name": "AC 2 Tier", "fare": 2485, "available": 12, "status": "available" },
+        { "code": "3A", "name": "AC 3 Tier", "fare": 1795, "available": 34, "status": "available" },
+        { "code": "SL", "name": "Sleeper", "fare": 685, "available": 220, "status": "available" }
+      ],
+      "rating": 3.9,
+      "onTime": 65
+    }
+  ],
+  "trainSchedules": {
+    "12951": [
+      { "station": "New Delhi", "code": "NDLS", "arrival": "—", "departure": "16:25", "day": 1, "distance": 0 },
+      { "station": "Ratlam Jn", "code": "RTM", "arrival": "22:40", "departure": "22:45", "day": 1, "distance": 710 },
+      { "station": "Vadodara Jn", "code": "BRC", "arrival": "01:55", "departure": "02:05", "day": 2, "distance": 1060 },
+      { "station": "Surat", "code": "ST", "arrival": "04:10", "departure": "04:15", "day": 2, "distance": 1200 },
+      { "station": "Mumbai Central", "code": "BCT", "arrival": "08:35", "departure": "—", "day": 2, "distance": 1384 }
+    ],
+    "12302": [
+      { "station": "New Delhi", "code": "NDLS", "arrival": "—", "departure": "16:55", "day": 1, "distance": 0 },
+      { "station": "Kanpur Central", "code": "CNB", "arrival": "21:20", "departure": "21:25", "day": 1, "distance": 440 },
+      { "station": "Mughal Sarai", "code": "MGS", "arrival": "01:45", "departure": "01:55", "day": 2, "distance": 780 },
+      { "station": "Gaya Jn", "code": "GAYA", "arrival": "03:10", "departure": "03:15", "day": 2, "distance": 990 },
+      { "station": "Howrah Jn", "code": "HWH", "arrival": "10:00", "departure": "—", "day": 2, "distance": 1450 }
+    ],
+    "12002": [
+      { "station": "New Delhi", "code": "NDLS", "arrival": "—", "departure": "06:15", "day": 1, "distance": 0 },
+      { "station": "Ghaziabad", "code": "GZB", "arrival": "06:38", "departure": "06:40", "day": 1, "distance": 28 },
+      { "station": "Aligarh", "code": "ALJN", "arrival": "07:45", "departure": "07:47", "day": 1, "distance": 140 },
+      { "station": "Kanpur Central", "code": "CNB", "arrival": "09:50", "departure": "09:52", "day": 1, "distance": 440 },
+      { "station": "Lucknow Charbagh", "code": "LKO", "arrival": "12:45", "departure": "—", "day": 1, "distance": 510 }
+    ]
+  }
+}

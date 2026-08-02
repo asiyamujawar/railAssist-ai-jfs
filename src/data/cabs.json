@@ -1,0 +1,62 @@
+{
+  "cabs": [
+    {
+      "id": "c001",
+      "bookingId": "b001",
+      "provider": "TrainMate Auto-Book",
+      "driver": {
+        "name": "Ramesh Yadav",
+        "phone": "+91 99201 88456",
+        "rating": 4.8,
+        "trips": 1240
+      },
+      "vehicle": {
+        "model": "Toyota Innova Crysta",
+        "plate": "MH 02 AB 4521",
+        "color": "Pearl White",
+        "type": "SUV"
+      },
+      "pickup": "Mumbai Central Station — Gate 3",
+      "destination": "The Taj Lands End, Byculla",
+      "estimatedFare": 285,
+      "status": "Updated",
+      "before": {
+        "pickupTime": "08:50",
+        "note": "Pickup scheduled for original arrival 08:35 — would miss if delayed"
+      },
+      "after": {
+        "pickupTime": "06:35",
+        "note": "Pickup rescheduled to match rebooked train arrival — driver notified automatically"
+      }
+    },
+    {
+      "id": "c002",
+      "bookingId": "b004",
+      "provider": "TrainMate Auto-Book",
+      "driver": {
+        "name": "Suresh Gowda",
+        "phone": "+91 98456 73210",
+        "rating": 4.9,
+        "trips": 2100
+      },
+      "vehicle": {
+        "model": "Maruti Suzuki Dzire",
+        "plate": "KA 01 CD 9982",
+        "color": "Silver",
+        "type": "Sedan"
+      },
+      "pickup": "KSR Bengaluru Station — Gate 1",
+      "destination": "The Leela Palace, Old Airport Road",
+      "estimatedFare": 420,
+      "status": "Updated",
+      "before": {
+        "pickupTime": "14:45",
+        "note": "Pickup for original Duronto arrival 14:30"
+      },
+      "after": {
+        "pickupTime": "05:15",
+        "note": "Rescheduled to match rebooked Kerala Express arrival — no extra charge"
+      }
+    }
+  ]
+}

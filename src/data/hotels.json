@@ -1,0 +1,54 @@
+{
+  "hotels": [
+    {
+      "id": "h001",
+      "bookingId": "b001",
+      "name": "The Taj Lands End",
+      "city": "Mumbai",
+      "address": "Byculla, Mumbai Central, Mumbai 400027",
+      "checkIn": "2026-08-06",
+      "checkOut": "2026-08-08",
+      "nights": 2,
+      "roomType": "Deluxe Sea Facing King",
+      "guests": 3,
+      "originalCheckInTime": "14:00",
+      "updatedCheckInTime": "10:30",
+      "status": "Updated",
+      "before": {
+        "checkInTime": "14:00",
+        "note": "Standard check-in — risk of waiting with luggage if train delayed"
+      },
+      "after": {
+        "checkInTime": "10:30",
+        "note": "Early check-in arranged by TrainMate — room ready on arrival, no waiting"
+      },
+      "price": 18500,
+      "image": "hotel-mumbai"
+    },
+    {
+      "id": "h002",
+      "bookingId": "b004",
+      "name": "The Leela Palace",
+      "city": "Bengaluru",
+      "address": "Old Airport Road, Bengaluru 560008",
+      "checkIn": "2026-05-14",
+      "checkOut": "2026-05-16",
+      "nights": 2,
+      "roomType": "Royal Club King",
+      "guests": 2,
+      "originalCheckInTime": "14:00",
+      "updatedCheckInTime": "06:00",
+      "status": "Updated",
+      "before": {
+        "checkInTime": "14:00",
+        "note": "Standard check-in — would arrive at 14:30 with original train"
+      },
+      "after": {
+        "checkInTime": "06:00",
+        "note": "Early check-in confirmed — room available on rebooked train arrival"
+      },
+      "price": 24200,
+      "image": "hotel-bangalore"
+    }
+  ]
+}

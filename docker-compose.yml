@@ -1,0 +1,134 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# TrainConcierge — Docker Compose
+# ─────────────────────────────────────────────────────────────────────────────
+# Usage:
+#   1. cp .env.example .env  →  fill in real values
+#   2. docker compose up -d  →  start MySQL + app
+#   3. docker compose down   →  stop and remove containers
+#   4. docker compose down -v →  also wipe the MySQL data volume
+#
+# All secrets are read from the .env file at the project root.
+# The .env file must NOT be committed to version control (.gitignore covers it).
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── MySQL 8 ──────────────────────────────────────────────────────────────────
+  db:
+    image: mysql:8.0
+    container_name: trainconcierge_db
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE:      ${DB_NAME}
+      MYSQL_USER:          ${DB_USERNAME}
+      MYSQL_PASSWORD:      ${DB_PASSWORD}
+
+    ports:
+      # Expose only on loopback so the DB is not reachable from the network.
+      # Remove the host binding entirely in production.
+      - "127.0.0.1:3306:3306"
+
+    volumes:
+      # Named volume: MySQL data survives container restarts and recreation.
+      - mysql_data:/var/lib/mysql
+      # Optional seed SQL: files in ./docker/mysql/init/ run once on first start.
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost",
+             "-u", "${DB_USERNAME}", "--password=${DB_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+    networks:
+      - trainconcierge_net
+
+  # ── Spring Boot Application ───────────────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: trainconcierge_app
+    restart: unless-stopped
+
+    # Wait for MySQL to be healthy before starting the JVM
+    depends_on:
+      db:
+        condition: service_healthy
+
+    environment:
+      # ── DataSource ────────────────────────────────────────────────────────────
+      # Points to the db service by its Compose service name (DNS resolved internally)
+      DB_HOST:     db
+      DB_PORT:     3306
+      DB_NAME:     ${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      # ── JPA ───────────────────────────────────────────────────────────────────
+      # update  → auto-creates/alters tables (safe for dev/staging)
+      # validate → only validates (recommended for production; use Flyway/Liquibase)
+      DDL_AUTO: ${DDL_AUTO:-update}
+
+      # ── JWT ───────────────────────────────────────────────────────────────────
+      JWT_SECRET:        ${JWT_SECRET}
+      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-86400000}
+
+      # ── CORS ─────────────────────────────────────────────────────────────────
+      # Comma-separated list of allowed origins for the React frontend.
+      # Example: http://localhost:3000,https://your-frontend.com
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000}
+
+      # ── Spring Profile ────────────────────────────────────────────────────────
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-docker}
+
+      # ── Monitoring ────────────────────────────────────────────────────────────
+      MONITORING_ENABLED:    ${MONITORING_ENABLED:-true}
+      MONITORING_INTERVAL_MS: ${MONITORING_INTERVAL_MS:-30000}
+      SEAT_ALERT_POLL_MS:    ${SEAT_ALERT_POLL_MS:-60000}
+
+      # ── Disruption Engine ─────────────────────────────────────────────────────
+      DISRUPTION_MIN_DELAY_MINUTES:    ${DISRUPTION_MIN_DELAY_MINUTES:-15}
+      DISRUPTION_MEDIUM_DELAY_MINUTES: ${DISRUPTION_MEDIUM_DELAY_MINUTES:-15}
+      DISRUPTION_HIGH_DELAY_MINUTES:   ${DISRUPTION_HIGH_DELAY_MINUTES:-60}
+
+      # ── Recommendation Weights ────────────────────────────────────────────────
+      RECOMMENDATION_WEIGHT_ARRIVAL:  ${RECOMMENDATION_WEIGHT_ARRIVAL:-0.35}
+      RECOMMENDATION_WEIGHT_DURATION: ${RECOMMENDATION_WEIGHT_DURATION:-0.25}
+      RECOMMENDATION_WEIGHT_FARE:     ${RECOMMENDATION_WEIGHT_FARE:-0.20}
+      RECOMMENDATION_WEIGHT_SEATS:    ${RECOMMENDATION_WEIGHT_SEATS:-0.20}
+      RECOMMENDATION_MIN_SEATS:       ${RECOMMENDATION_MIN_SEATS:-1}
+
+      # ── Coordination Buffers ──────────────────────────────────────────────────
+      COORDINATION_HOTEL_BUFFER_MINUTES: ${COORDINATION_HOTEL_BUFFER_MINUTES:-45}
+      COORDINATION_CAB_BUFFER_MINUTES:   ${COORDINATION_CAB_BUFFER_MINUTES:-15}
+
+      # ── JVM / Logging ─────────────────────────────────────────────────────────
+      JAVA_TOOL_OPTIONS: "-Xss512k"
+
+    ports:
+      - "${APP_PORT:-8080}:8080"
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+    networks:
+      - trainconcierge_net
+
+# ── Named volumes ─────────────────────────────────────────────────────────────
+volumes:
+  mysql_data:
+    driver: local
+
+# ── Internal network ──────────────────────────────────────────────────────────
+networks:
+  trainconcierge_net:
+    driver: bridge

@@ -1,0 +1,94 @@
+# ──────────────────────────────────────────────
+# Java
+# ──────────────────────────────────────────────
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+replay_pid*
+
+# ──────────────────────────────────────────────
+# Maven
+# ──────────────────────────────────────────────
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# ──────────────────────────────────────────────
+# IntelliJ IDEA
+# ──────────────────────────────────────────────
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# ──────────────────────────────────────────────
+# Eclipse / STS
+# ──────────────────────────────────────────────
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# ──────────────────────────────────────────────
+# VS Code
+# ──────────────────────────────────────────────
+.vscode/
+
+# ──────────────────────────────────────────────
+# Environment & secrets — NEVER commit these
+# ──────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.jks
+application-local.properties
+application-secrets.properties
+
+# ──────────────────────────────────────────────
+# OS
+# ──────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ──────────────────────────────────────────────
+# Logs
+# ──────────────────────────────────────────────
+logs/
+*.log
+*.log.*
+spring.log
+
+# ──────────────────────────────────────────────
+# Build artifacts
+# ──────────────────────────────────────────────
+dist/
+build/
+
+# ──────────────────────────────────────────────
+# Docker
+# ──────────────────────────────────────────────
+# Never commit live environment files
+.env
+.env.docker
+docker-compose.override.yml
+
+# Docker volume data (if bind-mounted locally)
+docker/mysql/data/

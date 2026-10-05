@@ -1,0 +1,602 @@
+{
+  "info": {
+    "name": "TrainConcierge API",
+    "description": "Complete API collection for the AI-Powered Autonomous Train Disruption Concierge & Smart Seat Alert System.\n\n## Quick Setup\n1. Import this collection into Postman.\n2. Create an Environment with the following variables:\n   - `baseUrl` = `http://localhost:8080`\n   - `adminToken` (auto-filled by 'Login' requests)\n   - `userToken`  (auto-filled by 'Login' requests)\n   - `scheduleId` (fill after creating a schedule)\n   - `journeyId`  (fill after creating a booking)\n   - `disruptionId` (fill after triggering disruption)\n3. Run **01 Auth / Admin Login** first to populate `adminToken`.\n4. Run **01 Auth / User Register + Login** to populate `userToken`.\n\n## Notes\n- All SIMULATED endpoints never contact a real railway / hotel / cab provider.\n- Swagger UI: http://localhost:8080/swagger-ui/index.html\n- OpenAPI JSON: http://localhost:8080/v3/api-docs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "trainconcierge-v1-complete"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080", "type": "string" }
+  ],
+  "item": [
+
+    {
+      "name": "01 — Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [{ "listen": "test", "script": { "exec": ["if (pm.response.code === 201) { var data = pm.response.json().data; pm.environment.set('userToken', data.token); }"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api","auth","register"] },
+            "body": { "mode": "raw", "raw": "{\n  \"firstName\": \"Test\",\n  \"lastName\": \"User\",\n  \"email\": \"testuser@example.com\",\n  \"password\": \"Test@2026!\"\n}" }
+          }
+        },
+        {
+          "name": "Login (User)",
+          "event": [{ "listen": "test", "script": { "exec": ["if (pm.response.code === 200) { var data = pm.response.json().data; pm.environment.set('userToken', data.token); }"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"] },
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"testuser@example.com\",\n  \"password\": \"Test@2026!\"\n}" }
+          }
+        },
+        {
+          "name": "Login (Admin)",
+          "event": [{ "listen": "test", "script": { "exec": ["if (pm.response.code === 200) { var data = pm.response.json().data; pm.environment.set('adminToken', data.token); }"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"] },
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"Admin@2026!\"\n}" }
+          }
+        },
+        {
+          "name": "Get Current User Profile",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/me", "host": ["{{baseUrl}}"], "path": ["api","auth","me"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "02 — Trains (Public)",
+      "item": [
+        {
+          "name": "List All Trains",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/trains?page=0&size=10&sortBy=trainNumber&sortDir=asc", "host": ["{{baseUrl}}"], "path": ["api","trains"], "query": [{"key":"page","value":"0"},{"key":"size","value":"10"},{"key":"sortBy","value":"trainNumber"},{"key":"sortDir","value":"asc"}] }
+          }
+        },
+        {
+          "name": "Get Train by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/trains/1", "host": ["{{baseUrl}}"], "path": ["api","trains","1"] }
+          }
+        },
+        {
+          "name": "Search Trains by Route and Date",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/trains/search?originStation=Mumbai&destinationStation=Delhi&journeyDate=2026-12-01", "host": ["{{baseUrl}}"], "path": ["api","trains","search"], "query": [{"key":"originStation","value":"Mumbai"},{"key":"destinationStation","value":"Delhi"},{"key":"journeyDate","value":"2026-12-01"}] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "03 — Schedules (Public)",
+      "item": [
+        {
+          "name": "List All Schedules",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/schedules?page=0&size=10", "host": ["{{baseUrl}}"], "path": ["api","schedules"], "query": [{"key":"page","value":"0"},{"key":"size","value":"10"}] }
+          }
+        },
+        {
+          "name": "Get Schedule by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/schedules/{{scheduleId}}", "host": ["{{baseUrl}}"], "path": ["api","schedules","{{scheduleId}}"] }
+          }
+        },
+        {
+          "name": "Search Schedules by Route and Date",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/schedules/search?originStation=Mumbai&destinationStation=Delhi&journeyDate=2026-12-01", "host": ["{{baseUrl}}"], "path": ["api","schedules","search"], "query": [{"key":"originStation","value":"Mumbai"},{"key":"destinationStation","value":"Delhi"},{"key":"journeyDate","value":"2026-12-01"}] }
+          }
+        },
+        {
+          "name": "Get Seat Availability for Schedule",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/schedules/{{scheduleId}}/availability", "host": ["{{baseUrl}}"], "path": ["api","schedules","{{scheduleId}}","availability"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "04 — Bookings",
+      "item": [
+        {
+          "name": "Create Booking",
+          "event": [{ "listen": "test", "script": { "exec": ["if (pm.response.code === 201) { var data = pm.response.json().data; pm.environment.set('journeyId', data.journeyId); }"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/bookings", "host": ["{{baseUrl}}"], "path": ["api","bookings"] },
+            "body": { "mode": "raw", "raw": "{\n  \"scheduleId\": {{scheduleId}},\n  \"seatClass\": \"SECOND\",\n  \"numberOfSeats\": 2\n}" }
+          }
+        },
+        {
+          "name": "Get My Bookings",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/bookings/my?page=0&size=10&sortBy=createdAt&sortDir=desc", "host": ["{{baseUrl}}"], "path": ["api","bookings","my"], "query": [{"key":"page","value":"0"},{"key":"size","value":"10"},{"key":"sortBy","value":"createdAt"},{"key":"sortDir","value":"desc"}] }
+          }
+        },
+        {
+          "name": "Get Booking by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/bookings/1", "host": ["{{baseUrl}}"], "path": ["api","bookings","1"] }
+          }
+        },
+        {
+          "name": "Cancel Booking",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/bookings/1/cancel", "host": ["{{baseUrl}}"], "path": ["api","bookings","1","cancel"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "05 — Disruptions",
+      "item": [
+        {
+          "name": "Get My Disruptions",
+          "event": [{ "listen": "test", "script": { "exec": ["if (pm.response.code === 200) { var data = pm.response.json().data; if (data && data.length > 0) pm.environment.set('disruptionId', data[0].id); }"], "type": "text/javascript" } }],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/disruptions/my", "host": ["{{baseUrl}}"], "path": ["api","disruptions","my"] }
+          }
+        },
+        {
+          "name": "Get Disruption by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/disruptions/{{disruptionId}}", "host": ["{{baseUrl}}"], "path": ["api","disruptions","{{disruptionId}}"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "06 — Recommendations",
+      "item": [
+        {
+          "name": "Generate Recommendations for Disruption",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/disruptions/{{disruptionId}}/recommendations", "host": ["{{baseUrl}}"], "path": ["api","disruptions","{{disruptionId}}","recommendations"] }
+          }
+        },
+        {
+          "name": "Get Existing Recommendations",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/disruptions/{{disruptionId}}/recommendations", "host": ["{{baseUrl}}"], "path": ["api","disruptions","{{disruptionId}}","recommendations"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "07 — Rebooking",
+      "item": [
+        {
+          "name": "Rebook onto Alternative Train",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/disruptions/{{disruptionId}}/rebook", "host": ["{{baseUrl}}"], "path": ["api","disruptions","{{disruptionId}}","rebook"] },
+            "body": { "mode": "raw", "raw": "{\n  \"recommendationId\": 1,\n  \"autonomous\": false\n}" }
+          }
+        },
+        {
+          "name": "Get Rebooking History for Journey",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/journeys/{{journeyId}}/rebooking-history", "host": ["{{baseUrl}}"], "path": ["api","journeys","{{journeyId}}","rebooking-history"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "08 — Travel Coordination",
+      "item": [
+        {
+          "name": "Trigger Travel Coordination",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/journeys/{{journeyId}}/coordination/trigger", "host": ["{{baseUrl}}"], "path": ["api","journeys","{{journeyId}}","coordination","trigger"] }
+          }
+        },
+        {
+          "name": "Retry Failed Coordination",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/coordination/1/retry", "host": ["{{baseUrl}}"], "path": ["api","coordination","1","retry"] }
+          }
+        },
+        {
+          "name": "Get Coordination History for Journey",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/journeys/{{journeyId}}/coordination", "host": ["{{baseUrl}}"], "path": ["api","journeys","{{journeyId}}","coordination"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "09 — Hotel Bookings",
+      "item": [
+        {
+          "name": "Create Hotel Booking [SIMULATED]",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/hotels", "host": ["{{baseUrl}}"], "path": ["api","hotels"] },
+            "body": { "mode": "raw", "raw": "{\n  \"journeyId\": {{journeyId}},\n  \"hotelName\": \"Grand Central Hotel\",\n  \"checkInDate\": \"2026-12-01\",\n  \"checkOutDate\": \"2026-12-02\",\n  \"numberOfRooms\": 1\n}" }
+          }
+        },
+        {
+          "name": "Get Hotels for Journey",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/hotels/journey/{{journeyId}}", "host": ["{{baseUrl}}"], "path": ["api","hotels","journey","{{journeyId}}"] }
+          }
+        },
+        {
+          "name": "Reschedule Hotel Booking [SIMULATED]",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/hotels/1/reschedule", "host": ["{{baseUrl}}"], "path": ["api","hotels","1","reschedule"] },
+            "body": { "mode": "raw", "raw": "{\n  \"newCheckInDate\": \"2026-12-02\",\n  \"newCheckOutDate\": \"2026-12-03\"\n}" }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "10 — Cab Bookings",
+      "item": [
+        {
+          "name": "Create Cab Booking [SIMULATED]",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/cabs", "host": ["{{baseUrl}}"], "path": ["api","cabs"] },
+            "body": { "mode": "raw", "raw": "{\n  \"journeyId\": {{journeyId}},\n  \"pickupLocation\": \"Mumbai Central Station\",\n  \"dropOffLocation\": \"Airport\",\n  \"scheduledPickupTime\": \"2026-12-01T08:00:00\"\n}" }
+          }
+        },
+        {
+          "name": "Get Cabs for Journey",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/cabs/journey/{{journeyId}}", "host": ["{{baseUrl}}"], "path": ["api","cabs","journey","{{journeyId}}"] }
+          }
+        },
+        {
+          "name": "Reschedule Cab Booking [SIMULATED]",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/cabs/1/reschedule", "host": ["{{baseUrl}}"], "path": ["api","cabs","1","reschedule"] },
+            "body": { "mode": "raw", "raw": "{\n  \"newScheduledPickupTime\": \"2026-12-02T10:00:00\"\n}" }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "11 — Seat Alerts",
+      "item": [
+        {
+          "name": "Subscribe to Seat Alert",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/seat-alerts", "host": ["{{baseUrl}}"], "path": ["api","seat-alerts"] },
+            "body": { "mode": "raw", "raw": "{\n  \"scheduleId\": {{scheduleId}},\n  \"seatClass\": \"FIRST\",\n  \"threshold\": 5\n}" }
+          }
+        },
+        {
+          "name": "Get My Seat Alerts",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/seat-alerts/my", "host": ["{{baseUrl}}"], "path": ["api","seat-alerts","my"] }
+          }
+        },
+        {
+          "name": "Deactivate Seat Alert",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/seat-alerts/1/deactivate", "host": ["{{baseUrl}}"], "path": ["api","seat-alerts","1","deactivate"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "12 — Notifications",
+      "item": [
+        {
+          "name": "Get My Notifications",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/notifications/my?page=0&size=20", "host": ["{{baseUrl}}"], "path": ["api","notifications","my"], "query": [{"key":"page","value":"0"},{"key":"size","value":"20"}] }
+          }
+        },
+        {
+          "name": "Get Unread Count",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/notifications/unread-count", "host": ["{{baseUrl}}"], "path": ["api","notifications","unread-count"] }
+          }
+        },
+        {
+          "name": "Mark Notification as Read",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/notifications/1/read", "host": ["{{baseUrl}}"], "path": ["api","notifications","1","read"] }
+          }
+        },
+        {
+          "name": "Mark All Notifications as Read",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/notifications/read-all", "host": ["{{baseUrl}}"], "path": ["api","notifications","read-all"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "13 — Journey Timeline",
+      "item": [
+        {
+          "name": "Get Journey Timeline",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/journeys/{{journeyId}}/timeline", "host": ["{{baseUrl}}"], "path": ["api","journeys","{{journeyId}}","timeline"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "14 — Simulation — Train Status [SIMULATED]",
+      "item": [
+        {
+          "name": "Get Latest Simulated Status",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/simulation/trains/{{scheduleId}}/status", "host": ["{{baseUrl}}"], "path": ["api","simulation","trains","{{scheduleId}}","status"] }
+          }
+        },
+        {
+          "name": "Get Simulated Status History",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{userToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/simulation/trains/{{scheduleId}}/history", "host": ["{{baseUrl}}"], "path": ["api","simulation","trains","{{scheduleId}}","history"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "15 — Admin — Trains [ADMIN]",
+      "item": [
+        {
+          "name": "Create Train",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/trains", "host": ["{{baseUrl}}"], "path": ["api","admin","trains"] },
+            "body": { "mode": "raw", "raw": "{\n  \"trainNumber\": \"RAJ-2001\",\n  \"trainName\": \"Rajdhani Express\",\n  \"originStation\": \"Mumbai\",\n  \"destinationStation\": \"Delhi\",\n  \"trainType\": \"EXPRESS\"\n}" }
+          }
+        },
+        {
+          "name": "Update Train",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/trains/1", "host": ["{{baseUrl}}"], "path": ["api","admin","trains","1"] },
+            "body": { "mode": "raw", "raw": "{\n  \"trainName\": \"Rajdhani Express (Updated)\",\n  \"trainType\": \"SUPER_EXPRESS\"\n}" }
+          }
+        },
+        {
+          "name": "Deactivate Train",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/trains/1/deactivate", "host": ["{{baseUrl}}"], "path": ["api","admin","trains","1","deactivate"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "16 — Admin — Schedules [ADMIN]",
+      "item": [
+        {
+          "name": "Create Schedule",
+          "event": [{ "listen": "test", "script": { "exec": ["if (pm.response.code === 201) { var data = pm.response.json().data; pm.environment.set('scheduleId', data.id); }"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/schedules", "host": ["{{baseUrl}}"], "path": ["api","admin","schedules"] },
+            "body": { "mode": "raw", "raw": "{\n  \"trainId\": 1,\n  \"scheduledDate\": \"2026-12-01\",\n  \"departureTime\": \"06:00:00\",\n  \"arrivalTime\": \"14:00:00\",\n  \"firstClassSeats\": 50,\n  \"secondClassSeats\": 150,\n  \"sleeperSeats\": 200\n}" }
+          }
+        },
+        {
+          "name": "Update Seat Availability",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/schedules/{{scheduleId}}/availability", "host": ["{{baseUrl}}"], "path": ["api","admin","schedules","{{scheduleId}}","availability"] },
+            "body": { "mode": "raw", "raw": "{\n  \"seatClass\": \"SECOND\",\n  \"availableSeats\": 100\n}" }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "17 — Admin — Simulation Status [ADMIN][SIMULATED]",
+      "item": [
+        {
+          "name": "Update Simulated Status (Low-level)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/simulation/trains/{{scheduleId}}/status", "host": ["{{baseUrl}}"], "path": ["api","admin","simulation","trains","{{scheduleId}}","status"] },
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"DELAYED\",\n  \"delayMinutes\": 60,\n  \"reason\": \"Signal failure\"\n}" }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "18 — Admin — Simulation Control [ADMIN][SIMULATED]",
+      "description": "High-level Phase 19 simulation control endpoints. Run in the following order for a complete demo:\n1. Clear Cache\n2. First Monitoring Cycle (seed cache)\n3. Trigger Delay\n4. Trigger Disruption Evaluation\n5. (Optionally) Second Monitoring Cycle\n6. Restore Normal\n7. Clear Cache (reset for next run)",
+      "item": [
+        {
+          "name": "Step 1 — Clear Monitoring Cache",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/simulation/control/monitoring-cache", "host": ["{{baseUrl}}"], "path": ["api","admin","simulation","control","monitoring-cache"] }
+          }
+        },
+        {
+          "name": "Step 2 — Trigger Monitoring Cycle (Seed Cache)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/simulation/control/monitoring-cycle", "host": ["{{baseUrl}}"], "path": ["api","admin","simulation","control","monitoring-cycle"] }
+          }
+        },
+        {
+          "name": "Step 3 — Trigger Train Delay",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/simulation/control/trigger-delay", "host": ["{{baseUrl}}"], "path": ["api","admin","simulation","control","trigger-delay"] },
+            "body": { "mode": "raw", "raw": "{\n  \"scheduleId\": {{scheduleId}},\n  \"delayMinutes\": 120,\n  \"reason\": \"Signal failure at junction — all services halted.\"\n}" }
+          }
+        },
+        {
+          "name": "Step 4 — Trigger Cancellation",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/simulation/control/trigger-cancellation", "host": ["{{baseUrl}}"], "path": ["api","admin","simulation","control","trigger-cancellation"] },
+            "body": { "mode": "raw", "raw": "{\n  \"scheduleId\": {{scheduleId}},\n  \"reason\": \"Strike action — services suspended.\"\n}" }
+          }
+        },
+        {
+          "name": "Step 5 — Trigger Monitoring Cycle (Detect Change)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/simulation/control/monitoring-cycle", "host": ["{{baseUrl}}"], "path": ["api","admin","simulation","control","monitoring-cycle"] }
+          }
+        },
+        {
+          "name": "Step 6 — Force Disruption Evaluation",
+          "event": [{ "listen": "test", "script": { "exec": ["if (pm.response.code === 200) { var data = pm.response.json().data; if (data && data.disruptionEventId) pm.environment.set('disruptionId', data.disruptionEventId); }"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/simulation/control/disruption-evaluation", "host": ["{{baseUrl}}"], "path": ["api","admin","simulation","control","disruption-evaluation"] },
+            "body": { "mode": "raw", "raw": "{\n  \"journeyId\": {{journeyId}}\n}" }
+          }
+        },
+        {
+          "name": "Step 7 — Force Disruption Evaluation Again (Duplicate Guard Check)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/simulation/control/disruption-evaluation", "host": ["{{baseUrl}}"], "path": ["api","admin","simulation","control","disruption-evaluation"] },
+            "body": { "mode": "raw", "raw": "{\n  \"journeyId\": {{journeyId}}\n}" }
+          }
+        },
+        {
+          "name": "Step 8 — Restore Train to ON_TIME",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/admin/simulation/control/restore-normal", "host": ["{{baseUrl}}"], "path": ["api","admin","simulation","control","restore-normal"] },
+            "body": { "mode": "raw", "raw": "{\n  \"scheduleId\": {{scheduleId}},\n  \"reason\": \"Signal issue resolved — services resumed.\"\n}" }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "19 — Health & Actuator",
+      "item": [
+        {
+          "name": "Health Check (Public)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/health", "host": ["{{baseUrl}}"], "path": ["api","health"] }
+          }
+        },
+        {
+          "name": "Actuator Health",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/actuator/health", "host": ["{{baseUrl}}"], "path": ["actuator","health"] }
+          }
+        }
+      ]
+    }
+
+  ]
+}
